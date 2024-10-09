@@ -16,7 +16,10 @@ steps:
   inputs:
     versionSpec: '17'
     jdkArchitectureOption: 'x64'
-    jdkSourceOption: AzureStorage
+    jdkSourceOption: LocalDirectory
+    jdkFile: 'amazon-corretto-17-x64-linux-jdk.tar.gz'
+    jdkDestinationDirectory: 'output'
+    cleanDestinationDirectory: true
 - task: Maven@4
   inputs:
     mavenPomFile: 'pom.xml'
