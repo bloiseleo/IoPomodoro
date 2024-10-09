@@ -24,24 +24,22 @@ stages:
         - bash: | 
             version=$(echo "$(Build.SourceBranch)" | sed -E 's|.*/([0-9]+\.[0-9]+\.[0-9]+)|\1|')
             echo "##vso[task.setvariable variable=extractedVersion;]$version";
-          displayName: Extract Version
+            branchName=$(echo $(Build.SourceBranch) | sed 's#refs/heads/##')
+            echo "##vso[task.setvariable variable=branchName;]$branchName"
+          displayName: Extract Version and Commit
         - bash: |
+            git checkout $(branchName)
             echo "New Version $(extractedVersion)"
             xmlstarlet ed -N p=http://maven.apache.org/POM/4.0.0 -u "/p:project/p:version" -v "$(extractedVersion)" pom.xml > pom2.xml
             rm pom.xml
             mv pom2.xml pom.xml
             cat pom.xml
-          displayName: Change version in POM.xml
-        - bash: |
-            git fetch
-            echo "Committing changes..."
             git add --all
             git commit -m "feat: update version to $(extractedVersion)"
-            branchName=$(echo $(Build.SourceBranch) | sed 's#refs/heads/##')
             echo "Branch name $branchName"
             git push origin $branchName
             echo "Done!"
-          displayName: Push changes.
+          displayName: Change version in POM.xml and Push it!
   - stage: 'BuildApp'
     displayName: 'Build and Test Application'
     dependsOn: 'UpdateVersion'
