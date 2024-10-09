@@ -23,8 +23,10 @@ jobs:
           xmlstarlet ed -N p=http://maven.apache.org/POM/4.0.0 -u "/p:project/p:version" -v "1.0.1" pom.xml > pom2.xml
           rm pom.xml
           mv pom2.xml pom.xml
+          cat pom.xml
       - bash: |
           echo "Committing changes..."
           git add --all
           git commit -m "feat: update version to $(extractedVersion)"
           git push origin $(Build.SourceBranch)
+          echo "Done!"
