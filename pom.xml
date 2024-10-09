@@ -10,7 +10,7 @@
   </parent>
   <groupId>io.pomodoro</groupId>
   <artifactId>api</artifactId>
-  <version>refs/heads/feat/publish_pipeline</version>
+  <version>0.0.2</version>
   <name>io.pomodoro.api</name>
   <description>io.pomodoro.api</description>
   <url/>
