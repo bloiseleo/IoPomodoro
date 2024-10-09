@@ -4,12 +4,12 @@ jobs:
     steps:
       - bash: |
           # Extract name and version while considering namespaces
+          branchName=$(echo $(Build.SourceBranch) | sed 's#refs/heads/##')
+          git pull origin $branchName
           NAME=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='artifactId'])" pom.xml)
-          VERSION=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='version'])" pom.xml)
-          
+          VERSION=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='version'])" pom.xml)  
           echo "##vso[task.setvariable variable=appName;isOutput=true]$NAME"
           echo "##vso[task.setvariable variable=appVersion;isOutput=true]$VERSION"
-          
           echo "Project Name: $NAME"
           echo "Project Version: $VERSION"
         name: SetVariables
