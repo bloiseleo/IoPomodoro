@@ -34,3 +34,4 @@ jobs:
           git push origin $(Build.SourceBranch)
           echo "Done!"
         displayName: Push changes.
+  - template: templates/jobs_template.yaml
