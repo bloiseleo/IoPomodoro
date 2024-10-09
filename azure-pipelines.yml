@@ -1,6 +1,5 @@
-trigger:
-- development
-
+pr:
+  - development
 pool:
   name: BeePool
 
