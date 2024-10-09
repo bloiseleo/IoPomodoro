@@ -2,7 +2,7 @@ trigger:
 - development
 
 pool:
-  vmImage: ubuntu-latest
+  name: BeePool
 
 steps:
 - script: |
