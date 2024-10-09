@@ -1,0 +1,51 @@
+trigger:
+  branches:
+    include:
+      - release/*
+    exclude:
+      - '*'
+
+pool:
+  name: BeePool
+
+stages:
+  - stage: 'UpdateVersion'
+    displayName: 'Update Project Version'
+    jobs:
+    - job: UpdateVersion
+      displayName: Update Version in pom.xml
+      steps:
+        - bash: |
+            git config --global user.email "pipeline@azure.com"
+            git config --global user.name "Pipeline Azure"
+          displayName: Configure GIT
+        - checkout: self
+          persistCredentials: true
+          clean: true
+          fetchDepth: true
+        - bash: | 
+            version=$(echo "$(Build.SourceBranch)" | sed -E 's|.*/([0-9]+\.[0-9]+\.[0-9]+)|\1|')
+            echo "##vso[task.setvariable variable=extractedVersion;]$version";
+            branchName=$(echo $(Build.SourceBranch) | sed 's#refs/heads/##')
+            echo "##vso[task.setvariable variable=branchName;]$branchName"
+          displayName: Extract Version and Branch Name.
+        - bash: |
+            git checkout $(branchName)
+            git pull origin $(branchName) --rebase
+            echo "New Version $(extractedVersion)"
+            xmlstarlet ed -N p=http://maven.apache.org/POM/4.0.0 -u "/p:project/p:version" -v "$(extractedVersion)" pom.xml > pom2.xml
+            rm pom.xml
+            mv pom2.xml pom.xml
+            cat pom.xml
+            git add --all
+            git commit -m "feat: update version to $(extractedVersion)"
+            echo "Branch name $(branchName)"
+            git push origin $(branchName) --force
+            echo "Done!"
+          displayName: Change version in POM.xml and Push it!
+  - stage: 'BuildApp'
+    displayName: 'Build and Test Application'
+    dependsOn: 'UpdateVersion'
+    jobs:
+      - template: templates/jobs_template.yaml
+      
