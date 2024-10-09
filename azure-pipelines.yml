@@ -5,20 +5,8 @@ pool:
   name: BeePool
 
 jobs:
-  - job: PrepareEnvironment
-    displayName: Prepare Environment
-    steps:
-      - task: JavaToolInstaller@0
-        inputs:
-          versionSpec: '17'
-          jdkArchitectureOption: 'x64'
-          jdkSourceOption: LocalDirectory
-          jdkFile: '../../../amazon-corretto-17-x64-linux-jdk.tar.gz'
-          jdkDestinationDirectory: '../../../output'
-          cleanDestinationDirectory: true
   - job: ExtractNameAndVersion
     displayName: Extract name and version
-    dependsOn: PrepareEnvironment
     steps:
       - bash: |
           # Extract name and version while considering namespaces
@@ -35,6 +23,14 @@ jobs:
     displayName: Test Application
     dependsOn: ExtractNameAndVersion
     steps:
+      - task: JavaToolInstaller@0
+        inputs:
+          versionSpec: '17'
+          jdkArchitectureOption: 'x64'
+          jdkSourceOption: LocalDirectory
+          jdkFile: '../../../amazon-corretto-17-x64-linux-jdk.tar.gz'
+          jdkDestinationDirectory: '../../../output'
+          cleanDestinationDirectory: true
       - task: Maven@4
         inputs:
           mavenPomFile: 'pom.xml'
@@ -55,16 +51,24 @@ jobs:
       appName: $[ dependencies.ExtractNameAndVersion.outputs['SetVariables.appName'] ]
       appVersion: $[ dependencies.ExtractNameAndVersion.outputs['SetVariables.appVersion'] ]
     steps:
-    - task: Maven@4
-      inputs:
-        mavenPomFile: 'pom.xml'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.17'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/TEST-*.xml'
-        goals: 'package'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.SourcesDirectory)/target/$(appName)-$(appVersion).jar'
-        ArtifactName: 'app'
+      - task: JavaToolInstaller@0
+        inputs:
+          versionSpec: '17'
+          jdkArchitectureOption: 'x64'
+          jdkSourceOption: LocalDirectory
+          jdkFile: '../../../amazon-corretto-17-x64-linux-jdk.tar.gz'
+          jdkDestinationDirectory: '../../../output'
+          cleanDestinationDirectory: true
+      - task: Maven@4
+        inputs:
+          mavenPomFile: 'pom.xml'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.17'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          goals: 'package'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.SourcesDirectory)/target/$(appName)-$(appVersion).jar'
+          ArtifactName: 'app'
