@@ -1,0 +1,35 @@
+trigger:
+- development
+
+pool:
+  name: BeePool
+
+steps:
+- script: |
+    # Extract name and version while considering namespaces
+    NAME=$(xmllint --xpath "string(//*[local-name()='name'])" pom.xml)
+    VERSION=$(xmllint --xpath "string(//*[local-name()='version' and not(../parent)])" pom.xml)
+    
+    echo "Project Name: $NAME"
+    echo "Project Version: $VERSION"
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: LocalDirectory
+    jdkFile: '../../../amazon-corretto-17-x64-linux-jdk.tar.gz'
+    jdkDestinationDirectory: '../../../output'
+    cleanDestinationDirectory: true
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.17'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    goals: 'package'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)/target/api-0.0.1-SNAPSHOT.jar'
+    ArtifactName: 'drop'
