@@ -1,0 +1,13 @@
+trigger:
+  branches:
+    include:
+      - release/*
+
+pool:
+  name: BeePool
+
+jobs:
+  - job: UpdateVersion
+    displayName: Update Version in pom.xml
+    steps:
+      - bash: echo "$(Build.SourceBranch)";
