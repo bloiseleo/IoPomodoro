@@ -1,7 +1,10 @@
 trigger:
+  batch: true
   branches:
     include:
       - release/*
+    exclude:
+      - '*'
 
 pool:
   name: BeePool
@@ -35,3 +38,4 @@ jobs:
           echo "Done!"
         displayName: Push changes.
   - template: templates/jobs_template.yaml
+    
