@@ -36,7 +36,7 @@ stages:
             echo "Committing changes..."
             git add --all
             git commit -m "feat: update version to $(extractedVersion)"
-            git push origin $(Build.SourceBranch)
+            git push origin $(Build.SourceBranchName)
             echo "Done!"
           displayName: Push changes.
   - stage: 'BuildApp'
