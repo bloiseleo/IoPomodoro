@@ -1,0 +1,27 @@
+trigger:
+- development
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: |
+    # Extract name and version while considering namespaces
+    NAME=$(xmllint --xpath "string(//*[local-name()='name'])" pom.xml)
+    VERSION=$(xmllint --xpath "string(//*[local-name()='version' and not(../parent)])" pom.xml)
+    
+    echo "Project Name: $NAME"
+    echo "Project Version: $VERSION"
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.17'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    goals: 'package'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
