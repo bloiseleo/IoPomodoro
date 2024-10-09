@@ -31,5 +31,5 @@ steps:
     goals: 'package'
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.SourcesDirectory)/target/api-0.0.1-SNAPSHOT.jar'
     ArtifactName: 'drop'
