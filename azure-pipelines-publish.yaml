@@ -39,8 +39,8 @@ stages:
             cat pom.xml
             git add --all
             git commit -m "feat: update version to $(extractedVersion)"
-            echo "Branch name $branchName"
-            git push origin $branchName
+            echo "Branch name $(branchName)"
+            git push origin $(branchName) --force
             echo "Done!"
           displayName: Change version in POM.xml and Push it!
   - stage: 'BuildApp'
