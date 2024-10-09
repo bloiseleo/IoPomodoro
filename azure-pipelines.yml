@@ -12,6 +12,11 @@ steps:
     
     echo "Project Name: $NAME"
     echo "Project Version: $VERSION"
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: AzureStorage
 - task: Maven@4
   inputs:
     mavenPomFile: 'pom.xml'
