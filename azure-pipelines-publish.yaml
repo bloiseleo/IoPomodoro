@@ -38,6 +38,7 @@ stages:
             git commit -m "feat: update version to $(extractedVersion)"
             branchName=$(echo $(Build.SourceBranch) | sed 's#refs/heads/##')
             echo "Branch name $branchName"
+            git fetch
             git push origin $branchName
             echo "Done!"
           displayName: Push changes.
