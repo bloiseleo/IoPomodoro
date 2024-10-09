@@ -10,8 +10,8 @@ jobs:
     steps:
       - bash: |
           # Extract name and version while considering namespaces
-          NAME=$(xmllint --xpath "string(//*[local-name()='name'])" pom.xml)
-          VERSION=$(xmllint --xpath "string(//*[local-name()='version' and not(../parent)])" pom.xml)
+          NAME=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='artifactId'])" pom.xml)
+          VERSION=$(xmllint --xpath "string(/*[local-name()='project']/*[local-name()='version'])" pom.xml)
           
           echo "##vso[task.setvariable variable=appName;isOutput=true]$NAME"
           echo "##vso[task.setvariable variable=appVersion;isOutput=true]$VERSION"
