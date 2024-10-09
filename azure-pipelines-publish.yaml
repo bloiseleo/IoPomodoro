@@ -26,9 +26,10 @@ stages:
             echo "##vso[task.setvariable variable=extractedVersion;]$version";
             branchName=$(echo $(Build.SourceBranch) | sed 's#refs/heads/##')
             echo "##vso[task.setvariable variable=branchName;]$branchName"
-          displayName: Extract Version and Commit
+          displayName: Extract Version and Branch Name.
         - bash: |
             git checkout $(branchName)
+            git pull origin $(branchName)
             echo "New Version $(extractedVersion)"
             xmlstarlet ed -N p=http://maven.apache.org/POM/4.0.0 -u "/p:project/p:version" -v "$(extractedVersion)" pom.xml > pom2.xml
             rm pom.xml
