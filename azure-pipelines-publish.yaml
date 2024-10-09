@@ -10,4 +10,11 @@ jobs:
   - job: UpdateVersion
     displayName: Update Version in pom.xml
     steps:
-      - bash: echo "$(Build.SourceBranch)";
+      - bash: | 
+          version=$(echo "$(Build.SourceBranch)" | sed -E 's|.*/([0-9]+\.[0-9]+\.[0-9]+)|\1|')
+          echo "##vso[task.setvariable variable=extractedVersion;]$version";
+      - bash: |
+          echo "New Version $(extractedVersion)"
+          xmlstarlet ed -N p=http://maven.apache.org/POM/4.0.0 -u "/p:project/p:version" -v "1.0.1" pom.xml > pom2.xml
+          rm pom.xml
+          mv pom2.xml pom.xml
