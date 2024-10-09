@@ -1,5 +1,7 @@
 pr:
-  - development
+  branches:
+    include:
+      - development
 pool:
   name: BeePool
 
