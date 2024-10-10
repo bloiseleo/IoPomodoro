@@ -43,6 +43,11 @@ stages:
             git push origin $(branchName) --force
             echo "Done!"
           displayName: Change version in POM.xml and Push it!
+        - bash: |
+            echo "Cleaning up workspace..."
+            rm -rf $(Build.SourcesDirectory)/*
+            echo "Workspace cleaned."
+          displayName: Cleanup Workspace
   - stage: 'BuildApp'
     displayName: 'Build and Test Application'
     dependsOn: 'UpdateVersion'
