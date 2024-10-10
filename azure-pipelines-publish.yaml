@@ -2,8 +2,6 @@ trigger:
   branches:
     include:
       - release/*
-    exclude:
-      - '*'
 
 pool:
   name: BeePool
