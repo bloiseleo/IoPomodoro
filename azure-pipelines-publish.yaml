@@ -19,7 +19,6 @@ stages:
           displayName: Configure GIT
         - checkout: self
           persistCredentials: true
-          clean: true
           fetchDepth: true
         - bash: | 
             version=$(echo "$(Build.SourceBranch)" | sed -E 's|.*/([0-9]+\.[0-9]+\.[0-9]+)|\1|')
@@ -41,9 +40,9 @@ stages:
             git push origin $(branchName) --force
             echo "Done!"
           displayName: Change version in POM.xml and Push it!
-  - stage: 'BuildApp'
-    displayName: 'Build and Test Application'
-    dependsOn: 'UpdateVersion'
-    jobs:
-      - template: templates/jobs_template.yaml
+  # - stage: 'BuildApp'
+  #   displayName: 'Build and Test Application'
+  #   dependsOn: 'UpdateVersion'
+  #   jobs:
+  #     - template: templates/jobs_template.yaml
       
